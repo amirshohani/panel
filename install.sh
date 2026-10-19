@@ -271,7 +271,14 @@ python3 -m venv /opt/mypanel/venv
 /opt/mypanel/venv/bin/pip install -q fastapi uvicorn qrcode
 openssl req -x509 -nodes -newkey ec -pkeyopt ec_paramgen_curve:prime256v1 -days 3650 -keyout /etc/mypanel/key.pem -out /etc/mypanel/cert.pem -subj "/CN=www.cloudflare.com"
 chmod 644 /etc/mypanel/key.pem /etc/mypanel/cert.pem
-curl -4 -s ifconfig.me > /opt/mypanel/host.txt
+IPV=""
+for U in https://api.ipify.org https://icanhazip.com https://ifconfig.me; do
+  IPV=$(curl -4 -s --max-time 8 "$U" | tr -d '[:space:]')
+  [[ "$IPV" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] && break
+  IPV=""
+done
+[ -n "$IPV" ] || read -p "IP سرور را وارد کنید: " IPV
+echo "$IPV" > /opt/mypanel/host.txt
 chmod +x /opt/mypanel/setpath.sh
 
 if [ -n "$DOMAIN" ]; then BIND=127.0.0.1; else BIND=0.0.0.0; fi
