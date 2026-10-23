@@ -16,7 +16,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
 apt-get install -y curl wget unzip nano git python3 python3-venv python3-pip openssl wireguard-tools iptables ufw cron
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install
-curl -fsSL https://sing-box.app/install.sh | sh
+(cd /tmp && curl -fLsS --retry 3 --retry-delay 2 https://sing-box.app/install.sh -o /tmp/mypanel-sing-box-install.sh && sh /tmp/mypanel-sing-box-install.sh); rm -f /tmp/mypanel-sing-box-install.sh
 systemctl disable --now xray sing-box || true
 
 mkdir -p /opt/mypanel /etc/mypanel /etc/wireguard /root/backups /usr/local/etc/xray /etc/sing-box
